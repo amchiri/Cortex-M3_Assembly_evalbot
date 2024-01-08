@@ -169,9 +169,9 @@ loop
 		CMP r10,#0x80							; On vérifie si le switch 1 est appuyé
 		BEQ OFF_MOTOR							; Si appuyé on éteint le moteur 
 		ldr r10,[r9]
-		CMP r10,#0x02							; On vérifie si le Bumper Gauche est appuyé
+		CMP r10,#0x02							; On vérifie si le Bumper Droite est appuyé
 		BEQ GAUCHE								; On va dans l'étiquette GAUCHE sinon on continue
-		CMP r10,#0x01							; On vérifie si le Bumper Droite est appuyé
+		CMP r10,#0x01							; On vérifie si le Bumper Gauche est appuyé
 		BEQ DROITE								; On va dans l'étiquette Droite sinon on continue
 		B loop									; Si on y va dans aucun étiquette on revient a l'étiquette loop
 end_
