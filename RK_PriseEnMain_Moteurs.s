@@ -211,7 +211,6 @@ GAUCHE
 		ldr r1, = DUREE_TOURNE 						;; pour la duree de la boucle d'attente1 (wait1)
 tempo 
 		subs r1, #1
-		BL FREEZE_TIMER
         bne tempo
 		BL MOTEUR_GAUCHE_AVANT
 		ldr r1, = DUREE_TOURNE
