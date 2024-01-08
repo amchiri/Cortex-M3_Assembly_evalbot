@@ -22,7 +22,11 @@
 		IMPORT  MOTEUR_GAUCHE_ARRIERE		; moteur gauche tourne vers l'arrière
 		IMPORT  MOTEUR_GAUCHE_INVERSE		; inverse le sens de rotation du moteur gauche
 		IMPORT	Reset_Handlerone
+		IMPORT  RESET_TIMER
+		IMPORT  INIT_TIMER
 		IMPORT  DISTANCE
+		IMPORT  FREEZE_TIMER
+		IMPORT  UNFREEZE_TIMER
 			
 SYSCTL_PERIPH_GPIO EQU		0x400FE108	; SYSCTL_RCGC2_R (p291 datasheet de lm3s9b92.pdf)
 
@@ -73,7 +77,8 @@ DUREE   			EQU     0x002FFFFF
 
 __main	
 		; ;; Enable the Port F & D peripheral clock 		(p291 datasheet de lm3s9B96.pdf)
-		; ;;									
+		; ;;
+		BL INIT_TIMER
 		ldr r6, = SYSCTL_PERIPH_GPIO  			;; RCGC2
         mov r0, #0x00000038  					;; Enable clock sur GPIO D, E et F où sont branchés les leds (0x28 == 0b111000)
 		; ;;														 									      (GPIO::FEDCBA)
@@ -141,8 +146,8 @@ __main
 ReadState
 
 		ldr r10,[r8]
-		CMP r10,#0x40
-		BNE ReadState
+		CMP r10,#0x40			; On vérifie si le switch 2 est appuyé
+		BNE ReadState			; Si non appuyé on revient on reste en lecture
 
 		; Configure les PWM + GPIO
 		BL	MOTEUR_INIT	   		   
@@ -152,70 +157,61 @@ ReadState
 		BL	MOTEUR_GAUCHE_ON
 		BL	MOTEUR_DROIT_AVANT	   
 		BL	MOTEUR_GAUCHE_AVANT
+		BL  RESET_TIMER							; On Reset le timer
         ldr r1, = DUREE_OFF 					;; pour la duree de la boucle d'attente1 (duree)
+		
 
 		; Boucle de pilotage des 2 Moteurs (Evalbot tourne sur lui même)
 loop	
 		; Evalbot avance droit devant
         str r2, [r7]    						;; Eteint LED car r2 = 0x00      
 		ldr r10,[r8]
-		CMP r10,#0x80
-		BEQ OFF_MOTOR
+		CMP r10,#0x80							; On vérifie si le switch 1 est appuyé
+		BEQ OFF_MOTOR							; Si appuyé on éteint le moteur 
 		ldr r10,[r9]
-		CMP r10,#0x02
-		BEQ GAUCHE
-		CMP r10,#0x01
-		BEQ DROITE
-		B loop
+		CMP r10,#0x02							; On vérifie si le Bumper Gauche est appuyé
+		BEQ GAUCHE								; On va dans l'étiquette GAUCHE sinon on continue
+		CMP r10,#0x01							; On vérifie si le Bumper Droite est appuyé
+		BEQ DROITE								; On va dans l'étiquette Droite sinon on continue
+		B loop									; Si on y va dans aucun étiquette on revient a l'étiquette loop
 end_
 		BL	MOTEUR_DROIT_AVANT	   
 		BL	MOTEUR_GAUCHE_AVANT
 		str r2, [r7]    						;; Eteint LED car r2 = 0x00      
         ldr r1, = DUREE 						;; pour la duree de la boucle d'attente1 (wait1)
 		ldr r10,[r8]
-		CMP r10,#0x40
-		BEQ ON_MOTOR
-		
-wait10	
-		ldr r10,[r8]
-		CMP r10,#0x40
-		BEQ ON_MOTOR
-		subs r1, #1
-        bne wait10
-        str r3, [r7]  							;; Allume LED1&2 portF broche 4&5 : 00110000 (contenu de r3)
-        ldr r1, = DUREE							;; pour la duree de la boucle d'attente2 (wait2)
-
-wait2   
-		ldr r10,[r8]
-		CMP r10,#0x40
-		BEQ ON_MOTOR
-		subs r1, #1
-        bne wait2
-		b   end_
+		CMP r10,#0x40							; On vérifie si le switch 2 est appuyé
+		BEQ ON_MOTOR							; Si appuyé on allumme le moteur
+		B  end_
 		
 OFF_MOTOR
 		BL MOTEUR_DROIT_OFF
 		BL MOTEUR_GAUCHE_OFF
-		BL DISTANCE
-		b end_
+		ldr r10,[r8]
+		CMP r10,#0x80							; On vérifie si le switch 1 est appuyé
+		BEQ FIN									; Si appuyé on va dans l'étiquette FIN
+		b OFF_MOTOR							    ; Sinon on boucle dans l'étiquette OFF_MOTOR
 		
 ON_MOTOR
 		BL MOTEUR_DROIT_ON
 		BL MOTEUR_GAUCHE_ON
 		BL	MOTEUR_DROIT_AVANT	   
 		BL	MOTEUR_GAUCHE_AVANT
+		BL  RESET_TIMER
 		b loop
 
 GAUCHE 
 		ldr r10,[r9]
-		CMP r10,#0x00
-		BEQ OFF_MOTOR
+		CMP r10,#0x00								; On vérifie si les deux Bumper sont appuyé pendant un certain temps
+		BEQ OFF_MOTOR								; Si oui on eteint les moteurs
 		subs r1, #1
         bne GAUCHE
-		BL MOTEUR_GAUCHE_ARRIERE
+		BL FREEZE_TIMER								; On Freeze le timer
+		BL MOTEUR_GAUCHE_ARRIERE					; Sinon on  Commence à tourner à gauche 
 		ldr r1, = DUREE_TOURNE 						;; pour la duree de la boucle d'attente1 (wait1)
 tempo 
 		subs r1, #1
+		BL FREEZE_TIMER
         bne tempo
 		BL MOTEUR_GAUCHE_AVANT
 		ldr r1, = DUREE_TOURNE
@@ -229,15 +225,17 @@ tempo2
         bne tempo2
 		BL	MOTEUR_DROIT_AVANT	   
 		BL	MOTEUR_GAUCHE_AVANT
+		BL  UNFREEZE_TIMER                          ; On UNFREEZE le timer
 		B loop
 
 DROITE 
 		ldr r10,[r9]
-		CMP r10,#0x00
-		BEQ OFF_MOTOR
-		subs r1, #1
-        bne DROITE
-		BL MOTEUR_DROIT_ARRIERE
+		CMP r10,#0x00								; On vérifie si les deux Bumper sont appuyé pendant un certain temps
+		BEQ OFF_MOTOR								; Si oui on eteint les moteurs
+		subs r1, #1									
+        bne DROITE		
+		BL FREEZE_TIMER								; On Freeze le timer
+		BL MOTEUR_DROIT_ARRIERE						; Sinon on  Commence à tourner à droite 
 		ldr r1, = DUREE_TOURNE 						;; pour la duree de la boucle d'attente1 (wait1)
 tempoD 
 		subs r1, #1
@@ -254,7 +252,12 @@ tempoD2
         bne tempoD2
 		BL	MOTEUR_DROIT_AVANT	   
 		BL	MOTEUR_GAUCHE_AVANT
+		BL  UNFREEZE_TIMER                          ; On UNFREEZE le timer
 		B loop
+
+FIN
+		BL DISTANCE								  ; Affiche la distance
+		B end_
 
 		NOP
         END

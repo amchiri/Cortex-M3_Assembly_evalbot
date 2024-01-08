@@ -70,6 +70,12 @@ RCC2_DIV400 EQU 0x40000000       ; Utiliser le diviseur 400 dans RCC2
 RCC_SYSDIV  EQU 0x07800000       ; Masque pour le champ SYSDIV dans RCC
 RCC_SYSDIV2 EQU 0x1F800000       ; Masque pour le champ SYSDIV2 dans RCC2
 
+;Block Systtick
+
+STCURRENT EQU 0xE000E018         ; Adresse du registre STCURRENT
+STCTRL	  EQU 0xE000E010		 ; Adresse du registre STCTRL
+STRELOAD  EQU 0xE000E014		 ; Adresse du registre STRELOAD
+
 GPTMCTL EQU 0x40030000+0x00C 
 GPTMCFG EQU 0x40030000
 GPTMTAMATCHR EQU 0x40030000+0x030
@@ -99,7 +105,11 @@ DUREE	        EQU		0x002FFFFF
 		EXPORT  MOTEUR_GAUCHE_ARRIERE
 		EXPORT  MOTEUR_GAUCHE_INVERSE
 		EXPORT	Reset_Handlerone
+		EXPORT  RESET_TIMER
+		EXPORT  INIT_TIMER
 		EXPORT  DISTANCE
+		EXPORT 	FREEZE_TIMER
+		EXPORT  UNFREEZE_TIMER
 
 
 
@@ -349,6 +359,59 @@ MOTEUR_GAUCHE_INVERSE
 		EOR	r0, r1, #GPIO_1
 		str	r0,[r6]
 		BX	LR
+
+INIT_TIMER 
+		;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION RCC 
+		LDR R2, =RCC			; Adresse du registre RCC
+		LDR R1, [R2]			; Contenue du registre RCC
+		BIC R1, R1, #0X7C0      ; Effacer le champ OSCSRC
+		ORR R1, R1, #RCC_OSCSRC_MAIN ; Sélectionner l'oscillateur principal
+		ORR R1, R1, #(0x00<<6)  ; Définir la fréquence du cristal à 16 MHz
+		BIC R1, R1, #RCC_PWRDN       ; Activer le PLL
+		STR R1, [R2]
+		;vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvFin configuration RCC
+				
+		;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION STRELOAD 
+		LDR R3, =0xE000E014      ; Adresse du registre STRELOAD
+		LDR R1, =0x00F423FF      ; Valeur de rechargement pour 1 seconde avec une horloge de 16 MHz
+		STR R1, [R3]
+		;vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvFin configuration STRELOAD 
+				
+		;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION STCURRENT 				
+		LDR R3, =0xE000E018      ; Adresse du registre STCURRENT
+		MOV R1, #0
+		STR R1, [R3]			 ; Ecriture pour reset STCURRENT
+		;vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvFin configuration STCURRENT
+				
+		;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION SysTick
+		LDR R3, =0xE000E010      ; Adresse du registre STCTRL
+		LDR R1, [R3]			 ; Contenue du registre STCTRL
+		ORR R1, R1, #1           ; Mettre le bit ENABLE à 1
+		ORR R1, R1, #2           ; Mettre le bit TICKINT à 1 si les interruptions sont nécessaires
+		STR R1, [R3]
+		;vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvFin configuration STCURRENT
+		BX LR
+
+RESET_TIMER
+		ldr r0,=STCURRENT		 ; Adresse du registre STCTRL
+		ldr r10,=0x0
+		str r10, [r0]			 ; Ecriture de 0 dans le registre pour reset le timer 
+		ldr r11,=0x0			 ; Remetre notre registre de seconde à 0
+		BX LR
+
+FREEZE_TIMER
+		ldr r0,=0xE000E010		 ; Adresse du registre STCTRL
+		ldr r10, [r0]
+		AND r10, r10,#0xFFFFFFFE ; On Met le dernier bit a 0
+		str r10, [r0]			 ; Ecriture de 0 dans le registre pour reset le timer 
+		BX LR
+		
+UNFREEZE_TIMER
+		ldr r0,=0xE000E010		 ; Adresse du registre STCTRL
+		ldr r10, [r0]
+		ORR r10, r10, #1           ; Mettre le bit ENABLE à 1
+		str r10, [r0]			 ; Ecriture de 0 dans le registre pour reset le timer 
+		BX LR
 		
 DISTANCE
         mov r5, #3                                
@@ -403,6 +466,9 @@ wait10        subs r1, #1                        ;; temps éteint
 fin
         bx lr                            ;; retourne sur le code principal
 
+
+
+;; TIMER A ( abandonner)
 Reset_Handlerone
 ; Pour le Stellaris LM3S8992, cela pourrait être, par exemple, 0x40030000
     ; Activation de l'horloge pour le GPTM (General Purpose Timer Module)
@@ -446,5 +512,6 @@ Reset_Handlerone
 
     ; Fin du gestionnaire de réinitialisation, retourne au programme principal
     BX LR
+;;;
 
 		END

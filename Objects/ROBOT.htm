@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\ROBOT.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\ROBOT.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sat Jan 06 15:55:36 2024
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Mon Jan 08 15:50:12 2024
 <BR><P>
 <H3>Maximum Stack Usage =          0 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -23,8 +23,12 @@ Functions with no stack information
  <LI><a href="#[20]">MOTEUR_GAUCHE_AVANT</a>
  <LI><a href="#[21]">MOTEUR_DROIT_INVERSE</a>
  <LI><a href="#[22]">MOTEUR_GAUCHE_INVERSE</a>
- <LI><a href="#[23]">DISTANCE</a>
- <LI><a href="#[24]">Reset_Handlerone</a>
+ <LI><a href="#[23]">INIT_TIMER</a>
+ <LI><a href="#[24]">RESET_TIMER</a>
+ <LI><a href="#[25]">FREEZE_TIMER</a>
+ <LI><a href="#[26]">UNFREEZE_TIMER</a>
+ <LI><a href="#[27]">DISTANCE</a>
+ <LI><a href="#[28]">Reset_Handlerone</a>
  <LI><a href="#[18]">__main</a>
  <LI><a href="#[9]">SysTick_Handler</a>
 </UL>
@@ -122,14 +126,34 @@ Global Symbols
 
 <P><STRONG><a name="[22]"></a>MOTEUR_GAUCHE_INVERSE</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text), UNUSED, KEPT)
 
-<P><STRONG><a name="[23]"></a>DISTANCE</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
+<P><STRONG><a name="[23]"></a>INIT_TIMER</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
 </UL>
 
-<P><STRONG><a name="[24]"></a>Reset_Handlerone</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text), UNUSED, KEPT)
+<P><STRONG><a name="[24]"></a>RESET_TIMER</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
+</UL>
+
+<P><STRONG><a name="[25]"></a>FREEZE_TIMER</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
+</UL>
+
+<P><STRONG><a name="[26]"></a>UNFREEZE_TIMER</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
+</UL>
+
+<P><STRONG><a name="[27]"></a>DISTANCE</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
+</UL>
+
+<P><STRONG><a name="[28]"></a>Reset_Handlerone</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_config_moteur.o(.text), UNUSED, KEPT)
 
 <P><STRONG><a name="[18]"></a>__main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rk_priseenmain_moteurs.o(.text))
-<BR><BR>[Calls]<UL><LI><a href="#[23]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DISTANCE
+<BR><BR>[Calls]<UL><LI><a href="#[27]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DISTANCE
+<LI><a href="#[26]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UNFREEZE_TIMER
+<LI><a href="#[25]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FREEZE_TIMER
+<LI><a href="#[24]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RESET_TIMER
+<LI><a href="#[23]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;INIT_TIMER
 <LI><a href="#[20]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTEUR_GAUCHE_AVANT
 <LI><a href="#[1f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTEUR_GAUCHE_ARRIERE
 <LI><a href="#[1e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTEUR_DROIT_AVANT
@@ -141,7 +165,7 @@ Global Symbols
 <LI><a href="#[17]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTEUR_INIT
 </UL>
 
-<P><STRONG><a name="[16]"></a>Reset_Handler</STRONG> (Thumb, 58 bytes, Stack size 0 bytes, startup_armcm3.o(.text))
+<P><STRONG><a name="[16]"></a>Reset_Handler</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, startup_armcm3.o(.text))
 
 <P><STRONG><a name="[1]"></a>NMI_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, startup_armcm3.o(.text))
 <BR><BR>[Calls]<UL><LI><a href="#[1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NMI_Handler

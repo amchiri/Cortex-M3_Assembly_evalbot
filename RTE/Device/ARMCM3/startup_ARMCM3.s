@@ -118,35 +118,6 @@ Reset_Handler   PROC
                 LDR      R0, =SystemInit   
                 BLX      R0
                 LDR      R0, =__main
-				;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION RCC 
-				LDR R2, =RCC			; Adresse du registre RCC
-				LDR R1, [R2]			; Contenue du registre RCC
-				BIC R1, R1, #0X7C0      ; Effacer le champ OSCSRC
-				ORR R1, R1, #RCC_OSCSRC_MAIN ; Sélectionner l'oscillateur principal
-				ORR R1, R1, #(0x00<<6)  ; Définir la fréquence du cristal à 16 MHz
-				BIC R1, R1, #RCC_PWRDN       ; Activer le PLL
-				STR R1, [R2]
-				;vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvFin configuration RCC
-				
-				;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION STRELOAD 
-				LDR R3, =0xE000E014      ; Adresse du registre STRELOAD
-				LDR R1, =0x00F423FF      ; Valeur de rechargement pour 1 seconde avec une horloge de 16 MHz
-				STR R1, [R3]
-				;vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvFin configuration STRELOAD 
-				
-				;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION STCURRENT 				
-				LDR R3, =0xE000E018      ; Adresse du registre STCURRENT
-				MOV R1, #0
-				STR R1, [R3]			 ; Ecriture pour reset STCURRENT
-				;vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvFin configuration STCURRENT
-				
-				;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION SysTick
-				LDR R3, =0xE000E010      ; Adresse du registre STCTRL
-				LDR R1, [R3]			 ; Contenue du registre STCTRL
-				ORR R1, R1, #1           ; Mettre le bit ENABLE à 1
-				ORR R1, R1, #2           ; Mettre le bit TICKINT à 1 si les interruptions sont nécessaires
-				STR R1, [R3]
-				;vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvFin configuration STCURRENT
 				BX       R0
                 ENDP
 
@@ -188,10 +159,10 @@ $Handler_Name   PROC
                 ALIGN
 					
 SysTick_Handler
-		PUSH {LR}		; Save the return address onto the stack
-		ADD R11,#1
-		POP {LR}		; Restore the orignal address
-		BX LR			; Back to the return address
+		PUSH {LR}		; Sauvegarde l'adresse de retour dans le stack
+		ADD R11,#1		; On incremente de un notre registre de seconde
+		POP {LR}		; Restauration de l'adresse original
+		BX LR			; Retour au code grâce à l'adresse du retour  
 
 ; User setup Stack & Heap
 

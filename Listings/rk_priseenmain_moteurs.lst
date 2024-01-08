@@ -48,417 +48,460 @@ ARM Macro Assembler    Page 1
                                                              le sens de rotatio
                                                             n du moteur gauche
    24 00000000                 IMPORT           Reset_Handlerone
-   25 00000000                 IMPORT           DISTANCE
-   26 00000000         
-   27 00000000 400FE108 
+   25 00000000                 IMPORT           RESET_TIMER
+   26 00000000                 IMPORT           INIT_TIMER
+   27 00000000                 IMPORT           DISTANCE
+   28 00000000                 IMPORT           FREEZE_TIMER
+   29 00000000                 IMPORT           UNFREEZE_TIMER
+   30 00000000         
+   31 00000000 400FE108 
                        SYSCTL_PERIPH_GPIO
                                EQU              0x400FE108  ; SYSCTL_RCGC2_R (p
                                                             291 datasheet de lm
                                                             3s9b92.pdf)
-   28 00000000         
-   29 00000000         ; The GPIODATA register is the data register
-   30 00000000 40025000 
+   32 00000000         
+   33 00000000         ; The GPIODATA register is the data register
+   34 00000000 40025000 
                        GPIO_PORTF_BASE
-                               EQU              0x40025000  ; GPIO Port F (APB)
-                                                             base: 0x4002.5000 
-                                                            (p416 datasheet de 
-                                                            lm3s9B92.pdf)
 
 
 
 ARM Macro Assembler    Page 2 
 
 
-   31 00000000         
-   32 00000000 E000E010 
+                               EQU              0x40025000  ; GPIO Port F (APB)
+                                                             base: 0x4002.5000 
+                                                            (p416 datasheet de 
+                                                            lm3s9B92.pdf)
+   35 00000000         
+   36 00000000 E000E010 
                        SYS_TICK_BASE
                                EQU              0xE000E010
-   33 00000000 E000E020 
+   37 00000000 E000E020 
                        STCTRL  EQU              SYS_TICK_BASE + 0x010
-   34 00000000 E000E024 
+   38 00000000 E000E024 
                        STRELOAD
                                EQU              SYS_TICK_BASE + 0x014
-   35 00000000 E000E028 
+   39 00000000 E000E028 
                        STCURRENT
                                EQU              SYS_TICK_BASE + 0x018
-   36 00000000         
-   37 00000000 00000000 
+   40 00000000         
+   41 00000000 00000000 
                        OFF_LED EQU              0x00
-   38 00000000         
-   39 00000000         ; The GPIODATA register is the data register
-   40 00000000 40007000 
+   42 00000000         
+   43 00000000         ; The GPIODATA register is the data register
+   44 00000000 40007000 
                        GPIO_PORTD_BASE
                                EQU              0x40007000  ; GPIO Port D (APB)
                                                              base: 0x4000.7000 
                                                             (p416 datasheet de 
                                                             lm3s9B92.pdf)
-   41 00000000         
-   42 00000000         ; The GPIODATA register is the data register
-   43 00000000 40024000 
+   45 00000000         
+   46 00000000         ; The GPIODATA register is the data register
+   47 00000000 40024000 
                        GPIO_PORTE_BASE
                                EQU              0x40024000  ; GPIO Port E (APB)
                                                              base: 0x4000.4000 
                                                             (p416 datasheet de 
                                                             lm3s9B92.pdf)
-   44 00000000         
-   45 00000000         ; configure the corresponding pin to be an output
-   46 00000000         ; all GPIO pins are inputs by default
-   47 00000000 00000400 
+   48 00000000         
+   49 00000000         ; configure the corresponding pin to be an output
+   50 00000000         ; all GPIO pins are inputs by default
+   51 00000000 00000400 
                        GPIO_O_DIR
                                EQU              0x00000400  ; GPIO Direction (p
                                                             417 datasheet de lm
                                                             3s9B92.pdf)
-   48 00000000         
-   49 00000000         ; The GPIODR2R register is the 2-mA drive control regist
+   52 00000000         
+   53 00000000         ; The GPIODR2R register is the 2-mA drive control regist
                        er
-   50 00000000         ; By default, all GPIO pins have 2-mA drive.
-   51 00000000 00000500 
+   54 00000000         ; By default, all GPIO pins have 2-mA drive.
+   55 00000000 00000500 
                        GPIO_O_DR2R
                                EQU              0x00000500  ; GPIO 2-mA Drive S
                                                             elect (p428 datashe
                                                             et de lm3s9B92.pdf)
                                                             
-   52 00000000         
-   53 00000000         ; Digital enable register
-   54 00000000         ; To use the pin as a digital input or output, the corre
-                       sponding GPIODEN bit must be set.
-   55 00000000 0000051C 
-                       GPIO_O_DEN
-                               EQU              0x0000051C  ; GPIO Digital Enab
-                                                            le (p437 datasheet 
-                                                            de lm3s9B92.pdf)
    56 00000000         
+   57 00000000         ; Digital enable register
+   58 00000000         ; To use the pin as a digital input or output, the corre
+                       sponding GPIODEN bit must be set.
+   59 00000000 0000051C 
+                       GPIO_O_DEN
 
 
 
 ARM Macro Assembler    Page 3 
 
 
-   57 00000000         ; Pul_up
-   58 00000000 00000510 
+                               EQU              0x0000051C  ; GPIO Digital Enab
+                                                            le (p437 datasheet 
+                                                            de lm3s9B92.pdf)
+   60 00000000         
+   61 00000000         ; Pul_up
+   62 00000000 00000510 
                        GPIO_I_PUR
                                EQU              0x00000510  ; GPIO Pull-Up (p43
                                                             2 datasheet de lm3s
                                                             9B92.pdf)
-   59 00000000         
-   60 00000000         ; Broches select
-   61 00000000 00000030 
+   63 00000000         
+   64 00000000         ; Broches select
+   65 00000000 00000030 
                        BROCHE4_5
                                EQU              0x30        ; led1 & led2 sur b
                                                             roche 4 et 5
-   62 00000000         
-   63 00000000 00000003 
+   66 00000000         
+   67 00000000 00000003 
                        BROCHE0_1
                                EQU              0x03        ; Bumper1 & Bumper2
                                                              sur broche 0 et 1
-   64 00000000         
-   65 00000000 000000C0 
+   68 00000000         
+   69 00000000 000000C0 
                        BROCHE6_7
                                EQU              0xC0        ; bouton poussoir 1
                                                              & bouton poussoir 
                                                             2 sur broche 6 et 7
                                                             
-   66 00000000         
-   67 00000000 015FFFFF 
+   70 00000000         
+   71 00000000 015FFFFF 
                        DUREE_TOURNE
                                EQU              0x015FFFFF  ; Duree pour tourné
                                                             e
-   68 00000000         
-   69 00000000 0001FFFF 
+   72 00000000         
+   73 00000000 0001FFFF 
                        DUREE_OFF
                                EQU              0x1FFFF
-   70 00000000         
-   71 00000000         ; blinking frequency
-   72 00000000 002FFFFF 
+   74 00000000         
+   75 00000000         ; blinking frequency
+   76 00000000 002FFFFF 
                        DUREE   EQU              0x002FFFFF
-   73 00000000         
-   74 00000000         __main
-   75 00000000         ; ;; Enable the Port F & D peripheral clock   (p291 data
+   77 00000000         
+   78 00000000         __main
+   79 00000000         ; ;; Enable the Port F & D peripheral clock   (p291 data
                        sheet de lm3s9B96.pdf)
-   76 00000000         ; ;;         
-   77 00000000 4E5B            ldr              r6, = SYSCTL_PERIPH_GPIO 
+   80 00000000         ; ;;
+   81 00000000 F7FF FFFE       BL               INIT_TIMER
+   82 00000004 4E5D            ldr              r6, = SYSCTL_PERIPH_GPIO 
                                                             ;; RCGC2
-   78 00000002 F04F 0038       mov              r0, #0x00000038 ;; Enable clock
+   83 00000006 F04F 0038       mov              r0, #0x00000038 ;; Enable clock
                                                              sur GPIO D, E et F
                                                              où sont branchés l
                                                             es leds (0x28 == 0b
                                                             111000)
-   79 00000006         ; ;;                              (GPIO::FEDCBA)
-   80 00000006 6030            str              r0, [r6]
-   81 00000008         
-   82 00000008         ; ;; "There must be a delay of 3 system clocks before an
+   84 0000000A         ; ;;                              (GPIO::FEDCBA)
+   85 0000000A 6030            str              r0, [r6]
+   86 0000000C         
+   87 0000000C         ; ;; "There must be a delay of 3 system clocks before an
                        y GPIO reg. access  (p413 datasheet de lm3s9B92.pdf)
-   83 00000008 BF00            nop                          ;; tres tres import
-                                                            ant....
-   84 0000000A BF00            nop
-   85 0000000C BF00            nop                          ;; pas necessaire e
-                                                            n simu ou en debbug
 
 
 
 ARM Macro Assembler    Page 4 
 
 
+   88 0000000C BF00            nop                          ;; tres tres import
+                                                            ant....
+   89 0000000E BF00            nop
+   90 00000010 BF00            nop                          ;; pas necessaire e
+                                                            n simu ou en debbug
                                                              step by step...
-   86 0000000E         
-   87 0000000E         ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION LED
-   88 0000000E         
-   89 0000000E 4E59            ldr              r6, = GPIO_PORTF_BASE+GPIO_O_DI
+   91 00000012         
+   92 00000012         ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION LED
+   93 00000012         
+   94 00000012 4E5B            ldr              r6, = GPIO_PORTF_BASE+GPIO_O_DI
 R 
                                                             ;; 1 Pin du portF e
                                                             n sortie (broche 4 
                                                             : 00010000)
-   90 00000010 F04F 0030       ldr              r0, = BROCHE4_5
-   91 00000014 6030            str              r0, [r6]
-   92 00000016         
-   93 00000016 4E58            ldr              r6, = GPIO_PORTF_BASE+GPIO_O_DE
+   95 00000014 F04F 0030       ldr              r0, = BROCHE4_5
+   96 00000018 6030            str              r0, [r6]
+   97 0000001A         
+   98 0000001A 4E5A            ldr              r6, = GPIO_PORTF_BASE+GPIO_O_DE
 N 
                                                             ;; Enable Digital F
                                                             unction 
-   94 00000018 F04F 0030       ldr              r0, = BROCHE4_5
-   95 0000001C 6030            str              r0, [r6]
-   96 0000001E         
-   97 0000001E 4E57            ldr              r6, = GPIO_PORTF_BASE+GPIO_O_DR
+   99 0000001C F04F 0030       ldr              r0, = BROCHE4_5
+  100 00000020 6030            str              r0, [r6]
+  101 00000022         
+  102 00000022 4E59            ldr              r6, = GPIO_PORTF_BASE+GPIO_O_DR
 2R 
                                                             ;; Choix de l'inten
                                                             sité de sortie (2mA
                                                             )
-   98 00000020 F04F 0030       ldr              r0, = BROCHE4_5
-   99 00000024 6030            str              r0, [r6]
-  100 00000026         
-  101 00000026 F04F 0200       mov              r2, #0x000  ;; pour eteindre LE
+  103 00000024 F04F 0030       ldr              r0, = BROCHE4_5
+  104 00000028 6030            str              r0, [r6]
+  105 0000002A         
+  106 0000002A F04F 0200       mov              r2, #0x000  ;; pour eteindre LE
                                                             D
-  102 0000002A         
-  103 0000002A         ; allumer la led broche 4 (BROCHE4_5)
-  104 0000002A F04F 0330       mov              r3, #BROCHE4_5 ;; Allume LED1&2
+  107 0000002E         
+  108 0000002E         ; allumer la led broche 4 (BROCHE4_5)
+  109 0000002E F04F 0330       mov              r3, #BROCHE4_5 ;; Allume LED1&2
                                                              portF broche 4&5 :
                                                              00110000
-  105 0000002E         
-  106 0000002E 4F54            ldr              r7, = GPIO_PORTF_BASE + (BROCHE
+  110 00000032         
+  111 00000032 4F56            ldr              r7, = GPIO_PORTF_BASE + (BROCHE
 4_5<<2) 
                                                             ;; @data Register =
                                                              @base + (mask<<2) 
                                                             ==> LED1
-  107 00000030         
-  108 00000030 603B            str              r3, [r7]
-  109 00000032         ;vvvvvvvvvvvvvvvvvvvvvvvFin configuration LED 
-  110 00000032         
-  111 00000032         ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION Switcher 1
-  112 00000032         
-  113 00000032         
-  114 00000032 F8DF 8150       ldr              r8, = GPIO_PORTD_BASE+GPIO_I_PU
+  112 00000034         
+  113 00000034 603B            str              r3, [r7]
+  114 00000036         ;vvvvvvvvvvvvvvvvvvvvvvvFin configuration LED 
+  115 00000036         
+  116 00000036         ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION Switcher 1
+  117 00000036         
+  118 00000036         
+  119 00000036 F8DF 8158       ldr              r8, = GPIO_PORTD_BASE+GPIO_I_PU
 R 
                                                             ;; Pul_up 
-  115 00000036 F04F 00C0       ldr              r0, = BROCHE6_7
-  116 0000003A F8C8 0000       str              r0, [r8]
-  117 0000003E         
-  118 0000003E F8DF 8148       ldr              r8, = GPIO_PORTD_BASE+GPIO_O_DE
-N 
-                                                            ;; Enable Digital F
-                                                            unction 
-  119 00000042 F04F 00C0       ldr              r0, = BROCHE6_7
-  120 00000046 F8C8 0000       str              r0, [r8]
+  120 0000003A F04F 00C0       ldr              r0, = BROCHE6_7
+  121 0000003E F8C8 0000       str              r0, [r8]
+  122 00000042         
+  123 00000042 F8DF 8150       ldr              r8, = GPIO_PORTD_BASE+GPIO_O_DE
 
 
 
 ARM Macro Assembler    Page 5 
 
 
-  121 0000004A         
-  122 0000004A F8DF 8140       ldr              r8, = GPIO_PORTD_BASE + (BROCHE
+N 
+                                                            ;; Enable Digital F
+                                                            unction 
+  124 00000046 F04F 00C0       ldr              r0, = BROCHE6_7
+  125 0000004A F8C8 0000       str              r0, [r8]
+  126 0000004E         
+  127 0000004E F8DF 8148       ldr              r8, = GPIO_PORTD_BASE + (BROCHE
 6_7<<2) 
                                                             ;; @data Register =
                                                              @base + (mask<<2) 
                                                             ==> Switcher
-  123 0000004E         
-  124 0000004E         ;vvvvvvvvvvvvvvvvvvvvvvvFin configuration Switcher 
-  125 0000004E         
-  126 0000004E         ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION Bumper
-  127 0000004E         
-  128 0000004E F8DF 9140       ldr              r9, = GPIO_PORTE_BASE+GPIO_I_PU
+  128 00000052         
+  129 00000052         ;vvvvvvvvvvvvvvvvvvvvvvvFin configuration Switcher 
+  130 00000052         
+  131 00000052         ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION Bumper
+  132 00000052         
+  133 00000052 F8DF 9148       ldr              r9, = GPIO_PORTE_BASE+GPIO_I_PU
 R 
                                                             ;; Pul_up 
-  129 00000052 F04F 0003       ldr              r0, = BROCHE0_1
-  130 00000056 F8C9 0000       str              r0, [r9]
-  131 0000005A         
-  132 0000005A F8DF 9138       ldr              r9, = GPIO_PORTE_BASE+GPIO_O_DE
+  134 00000056 F04F 0003       ldr              r0, = BROCHE0_1
+  135 0000005A F8C9 0000       str              r0, [r9]
+  136 0000005E         
+  137 0000005E F8DF 9140       ldr              r9, = GPIO_PORTE_BASE+GPIO_O_DE
 N 
                                                             ;; Enable Digital F
                                                             unction 
-  133 0000005E F04F 0003       ldr              r0, = BROCHE0_1
-  134 00000062 F8C9 0000       str              r0, [r9]
-  135 00000066         
-  136 00000066 F8DF 9130       ldr              r9, = GPIO_PORTE_BASE + (BROCHE
+  138 00000062 F04F 0003       ldr              r0, = BROCHE0_1
+  139 00000066 F8C9 0000       str              r0, [r9]
+  140 0000006A         
+  141 0000006A F8DF 9138       ldr              r9, = GPIO_PORTE_BASE + (BROCHE
 0_1<<2) 
                                                             ;; @data Register =
                                                              @base + (mask<<2) 
                                                             ==> Bumper  
-  137 0000006A         
-  138 0000006A         
-  139 0000006A         ;vvvvvvvvvvvvvvvvvvvvvvvFin configuration Bumper
-  140 0000006A         ;  BL Reset_Handlerone 
-  141 0000006A         ReadState
-  142 0000006A         
-  143 0000006A F8D8 A000       ldr              r10,[r8]
-  144 0000006E F1BA 0F40       CMP              r10,#0x40
-  145 00000072 D1FA            BNE              ReadState
-  146 00000074         
-  147 00000074         ; Configure les PWM + GPIO
-  148 00000074 F7FF FFFE       BL               MOTEUR_INIT
-  149 00000078         
-  150 00000078         ; Activer les deux moteurs droit et gauche
-  151 00000078 F7FF FFFE       BL               MOTEUR_DROIT_ON
-  152 0000007C F7FF FFFE       BL               MOTEUR_GAUCHE_ON
-  153 00000080 F7FF FFFE       BL               MOTEUR_DROIT_AVANT
-  154 00000084 F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
-  155 00000088 4944            ldr              r1, = DUREE_OFF ;; pour la dure
-                                                            e de la boucle d'at
-                                                            tente1 (duree)
-  156 0000008A         
-  157 0000008A         ; Boucle de pilotage des 2 Moteurs (Evalbot tourne sur l
-                       ui même)
-  158 0000008A         loop
-  159 0000008A         ; Evalbot avance droit devant
-  160 0000008A 603A            str              r2, [r7]    ;; Eteint LED car r
-                                                            2 = 0x00      
-  161 0000008C F8D8 A000       ldr              r10,[r8]
-  162 00000090 F1BA 0F80       CMP              r10,#0x80
+  142 0000006E         
+  143 0000006E         
+  144 0000006E         ;vvvvvvvvvvvvvvvvvvvvvvvFin configuration Bumper
+  145 0000006E         ;  BL Reset_Handlerone 
+  146 0000006E         ReadState
+  147 0000006E         
+  148 0000006E F8D8 A000       ldr              r10,[r8]
+  149 00000072 F1BA 0F40       CMP              r10,#0x40   ; On vérifie si le 
+                                                            switch 2 est appuyé
+                                                            
+  150 00000076 D1FA            BNE              ReadState   ; Si non appuyé on 
+                                                            revient on reste en
+                                                             lecture
+  151 00000078         
+  152 00000078         ; Configure les PWM + GPIO
+  153 00000078 F7FF FFFE       BL               MOTEUR_INIT
+  154 0000007C         
+  155 0000007C         ; Activer les deux moteurs droit et gauche
+  156 0000007C F7FF FFFE       BL               MOTEUR_DROIT_ON
+  157 00000080 F7FF FFFE       BL               MOTEUR_GAUCHE_ON
+  158 00000084 F7FF FFFE       BL               MOTEUR_DROIT_AVANT
+  159 00000088 F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
+  160 0000008C F7FF FFFE       BL               RESET_TIMER ; On Reset le timer
+                                                            
+  161 00000090 4945            ldr              r1, = DUREE_OFF ;; pour la dure
 
 
 
 ARM Macro Assembler    Page 6 
 
 
-  163 00000094 D024            BEQ              OFF_MOTOR
-  164 00000096 F8D9 A000       ldr              r10,[r9]
-  165 0000009A F1BA 0F02       CMP              r10,#0x02
-  166 0000009E D02F            BEQ              GAUCHE
-  167 000000A0 F1BA 0F01       CMP              r10,#0x01
-  168 000000A4 D047            BEQ              DROITE
-  169 000000A6 E7F0            B                loop
-  170 000000A8         end_
-  171 000000A8 F7FF FFFE       BL               MOTEUR_DROIT_AVANT
-  172 000000AC F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
-  173 000000B0 603A            str              r2, [r7]    ;; Eteint LED car r
+                                                            e de la boucle d'at
+                                                            tente1 (duree)
+  162 00000092         
+  163 00000092         
+  164 00000092         ; Boucle de pilotage des 2 Moteurs (Evalbot tourne sur l
+                       ui même)
+  165 00000092         loop
+  166 00000092         ; Evalbot avance droit devant
+  167 00000092 603A            str              r2, [r7]    ;; Eteint LED car r
                                                             2 = 0x00      
-  174 000000B2 493B            ldr              r1, = DUREE ;; pour la duree de
+  168 00000094 F8D8 A000       ldr              r10,[r8]
+  169 00000098 F1BA 0F80       CMP              r10,#0x80   ; On vérifie si le 
+                                                            switch 1 est appuyé
+                                                            
+  170 0000009C D014            BEQ              OFF_MOTOR   ; Si appuyé on étei
+                                                            nt le moteur 
+  171 0000009E F8D9 A000       ldr              r10,[r9]
+  172 000000A2 F1BA 0F02       CMP              r10,#0x02   ; On vérifie si le 
+                                                            Bumper Gauche est a
+                                                            ppuyé
+  173 000000A6 D024            BEQ              GAUCHE      ; On va dans l'étiq
+                                                            uette GAUCHE sinon 
+                                                            on continue
+  174 000000A8 F1BA 0F01       CMP              r10,#0x01   ; On vérifie si le 
+                                                            Bumper Droite est a
+                                                            ppuyé
+  175 000000AC D042            BEQ              DROITE      ; On va dans l'étiq
+                                                            uette Droite sinon 
+                                                            on continue
+  176 000000AE E7F0            B                loop        ; Si on y va dans a
+                                                            ucun étiquette on r
+                                                            evient a l'étiquett
+                                                            e loop
+  177 000000B0         end_
+  178 000000B0 F7FF FFFE       BL               MOTEUR_DROIT_AVANT
+  179 000000B4 F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
+  180 000000B8 603A            str              r2, [r7]    ;; Eteint LED car r
+                                                            2 = 0x00      
+  181 000000BA 493C            ldr              r1, = DUREE ;; pour la duree de
                                                              la boucle d'attent
                                                             e1 (wait1)
-  175 000000B4 F8D8 A000       ldr              r10,[r8]
-  176 000000B8 F1BA 0F40       CMP              r10,#0x40
-  177 000000BC D017            BEQ              ON_MOTOR
-  178 000000BE         
-  179 000000BE         wait10
-  180 000000BE F8D8 A000       ldr              r10,[r8]
-  181 000000C2 F1BA 0F40       CMP              r10,#0x40
-  182 000000C6 D012            BEQ              ON_MOTOR
-  183 000000C8 3901            subs             r1, #1
-  184 000000CA D1F8            bne              wait10
-  185 000000CC 603B            str              r3, [r7]    ;; Allume LED1&2 po
-                                                            rtF broche 4&5 : 00
-                                                            110000 (contenu de 
-                                                            r3)
-  186 000000CE 4934            ldr              r1, = DUREE ;; pour la duree de
-                                                             la boucle d'attent
-                                                            e2 (wait2)
-  187 000000D0         
-  188 000000D0         wait2
-  189 000000D0 F8D8 A000       ldr              r10,[r8]
-  190 000000D4 F1BA 0F40       CMP              r10,#0x40
-  191 000000D8 D009            BEQ              ON_MOTOR
-  192 000000DA 3901            subs             r1, #1
-  193 000000DC D1F8            bne              wait2
-  194 000000DE E7E3            b                end_
-  195 000000E0         
-  196 000000E0         OFF_MOTOR
-  197 000000E0 F7FF FFFE       BL               MOTEUR_DROIT_OFF
-  198 000000E4 F7FF FFFE       BL               MOTEUR_GAUCHE_OFF
-  199 000000E8 F7FF FFFE       BL               DISTANCE
-  200 000000EC E7DC            b                end_
-  201 000000EE         
-  202 000000EE         ON_MOTOR
-  203 000000EE F7FF FFFE       BL               MOTEUR_DROIT_ON
-  204 000000F2 F7FF FFFE       BL               MOTEUR_GAUCHE_ON
-  205 000000F6 F7FF FFFE       BL               MOTEUR_DROIT_AVANT
-  206 000000FA F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
-  207 000000FE E7C4            b                loop
-  208 00000100         
-  209 00000100         GAUCHE
-  210 00000100 F8D9 A000       ldr              r10,[r9]
-  211 00000104 F1BA 0F00       CMP              r10,#0x00
-  212 00000108 D0EA            BEQ              OFF_MOTOR
-  213 0000010A 3901            subs             r1, #1
+  182 000000BC F8D8 A000       ldr              r10,[r8]
+  183 000000C0 F1BA 0F40       CMP              r10,#0x40   ; On vérifie si le 
+                                                            switch 2 est appuyé
+                                                            
+  184 000000C4 D00A            BEQ              ON_MOTOR    ; Si appuyé on allu
+                                                            mme le moteur
+  185 000000C6 E7F3            B                end_
+  186 000000C8         
+  187 000000C8         OFF_MOTOR
+  188 000000C8 F7FF FFFE       BL               MOTEUR_DROIT_OFF
+  189 000000CC F7FF FFFE       BL               MOTEUR_GAUCHE_OFF
+  190 000000D0 F8D8 A000       ldr              r10,[r8]
+  191 000000D4 F1BA 0F80       CMP              r10,#0x80   ; On vérifie si le 
+                                                            switch 1 est appuyé
+                                                            
+  192 000000D8 D04B            BEQ              FIN         ; Si appuyé on va d
+                                                            ans l'étiquette FIN
+                                                            
 
 
 
 ARM Macro Assembler    Page 7 
 
 
-  214 0000010C D1F8            bne              GAUCHE
-  215 0000010E F7FF FFFE       BL               MOTEUR_GAUCHE_ARRIERE
-  216 00000112 4924            ldr              r1, = DUREE_TOURNE ;; pour la d
+  193 000000DA E7F5            b                OFF_MOTOR   ; Sinon on boucle d
+                                                            ans l'étiquette OFF
+                                                            _MOTOR
+  194 000000DC         
+  195 000000DC         ON_MOTOR
+  196 000000DC F7FF FFFE       BL               MOTEUR_DROIT_ON
+  197 000000E0 F7FF FFFE       BL               MOTEUR_GAUCHE_ON
+  198 000000E4 F7FF FFFE       BL               MOTEUR_DROIT_AVANT
+  199 000000E8 F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
+  200 000000EC F7FF FFFE       BL               RESET_TIMER
+  201 000000F0 E7CF            b                loop
+  202 000000F2         
+  203 000000F2         GAUCHE
+  204 000000F2 F8D9 A000       ldr              r10,[r9]
+  205 000000F6 F1BA 0F00       CMP              r10,#0x00   ; On vérifie si les
+                                                             deux Bumper sont a
+                                                            ppuyé pendant un ce
+                                                            rtain temps
+  206 000000FA D0E5            BEQ              OFF_MOTOR   ; Si oui on eteint 
+                                                            les moteurs
+  207 000000FC 3901            subs             r1, #1
+  208 000000FE D1F8            bne              GAUCHE
+  209 00000100 F7FF FFFE       BL               FREEZE_TIMER ; On Freeze le tim
+                                                            er
+  210 00000104 F7FF FFFE       BL               MOTEUR_GAUCHE_ARRIERE ; Sinon o
+                                                            n  Commence à tourn
+                                                            er à gauche 
+  211 00000108 4929            ldr              r1, = DUREE_TOURNE ;; pour la d
                                                             uree de la boucle d
                                                             'attente1 (wait1)
-  217 00000114         tempo
-  218 00000114 3901            subs             r1, #1
-  219 00000116 D1FD            bne              tempo
-  220 00000118 F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
-  221 0000011C 4921            ldr              r1, = DUREE_TOURNE
-  222 0000011E         tempo1
-  223 0000011E 3901            subs             r1, #1
-  224 00000120 D1FD            bne              tempo1
-  225 00000122 F7FF FFFE       BL               MOTEUR_DROIT_ARRIERE
-  226 00000126 491F            ldr              r1, = DUREE_TOURNE ;; pour la d
+  212 0000010A         tempo
+  213 0000010A 3901            subs             r1, #1
+  214 0000010C F7FF FFFE       BL               FREEZE_TIMER
+  215 00000110 D1FB            bne              tempo
+  216 00000112 F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
+  217 00000116 4926            ldr              r1, = DUREE_TOURNE
+  218 00000118         tempo1
+  219 00000118 3901            subs             r1, #1
+  220 0000011A D1FD            bne              tempo1
+  221 0000011C F7FF FFFE       BL               MOTEUR_DROIT_ARRIERE
+  222 00000120 4923            ldr              r1, = DUREE_TOURNE ;; pour la d
                                                             uree de la boucle d
                                                             'attente1 (wait1)
-  227 00000128         tempo2
-  228 00000128 3901            subs             r1, #1
-  229 0000012A D1FD            bne              tempo2
-  230 0000012C F7FF FFFE       BL               MOTEUR_DROIT_AVANT
-  231 00000130 F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
-  232 00000134 E7A9            B                loop
-  233 00000136         
-  234 00000136         DROITE
-  235 00000136 F8D9 A000       ldr              r10,[r9]
-  236 0000013A F1BA 0F00       CMP              r10,#0x00
-  237 0000013E D0CF            BEQ              OFF_MOTOR
-  238 00000140 3901            subs             r1, #1
-  239 00000142 D1F8            bne              DROITE
-  240 00000144 F7FF FFFE       BL               MOTEUR_DROIT_ARRIERE
-  241 00000148 4916            ldr              r1, = DUREE_TOURNE ;; pour la d
-                                                            uree de la boucle d
-                                                            'attente1 (wait1)
-  242 0000014A         tempoD
-  243 0000014A 3901            subs             r1, #1
-  244 0000014C D1FD            bne              tempoD
-  245 0000014E F7FF FFFE       BL               MOTEUR_DROIT_AVANT
-  246 00000152 4914            ldr              r1, = DUREE_TOURNE
-  247 00000154         tempoD1
-  248 00000154 3901            subs             r1, #1
-  249 00000156 D1FD            bne              tempoD1
-  250 00000158 F7FF FFFE       BL               MOTEUR_GAUCHE_ARRIERE
-  251 0000015C 4911            ldr              r1, = DUREE_TOURNE ;; pour la d
-                                                            uree de la boucle d
-                                                            'attente1 (wait1)
-  252 0000015E         tempoD2
-  253 0000015E 3901            subs             r1, #1
-  254 00000160 D1FD            bne              tempoD2
-  255 00000162 F7FF FFFE       BL               MOTEUR_DROIT_AVANT
-  256 00000166 F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
-  257 0000016A E78E            B                loop
-  258 0000016C         
-  259 0000016C BF00            NOP
-  260 0000016E                 END
-              00 00 400FE108 
-              40025400 
-              4002551C 
-              40025500 
+  223 00000122         tempo2
+  224 00000122 3901            subs             r1, #1
+  225 00000124 D1FD            bne              tempo2
+  226 00000126 F7FF FFFE       BL               MOTEUR_DROIT_AVANT
+  227 0000012A F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
+  228 0000012E F7FF FFFE       BL               UNFREEZE_TIMER ; On UNFREEZE le
+                                                             timer
+  229 00000132 E7AE            B                loop
+  230 00000134         
+  231 00000134         DROITE
+  232 00000134 F8D9 A000       ldr              r10,[r9]
+  233 00000138 F1BA 0F00       CMP              r10,#0x00   ; On vérifie si les
+                                                             deux Bumper sont a
+                                                            ppuyé pendant un ce
+                                                            rtain temps
+  234 0000013C D0C4            BEQ              OFF_MOTOR   ; Si oui on eteint 
 
 
 
 ARM Macro Assembler    Page 8 
 
 
+                                                            les moteurs
+  235 0000013E 3901            subs             r1, #1
+  236 00000140 D1F8            bne              DROITE
+  237 00000142 F7FF FFFE       BL               FREEZE_TIMER ; On Freeze le tim
+                                                            er
+  238 00000146 F7FF FFFE       BL               MOTEUR_DROIT_ARRIERE ; Sinon on
+                                                              Commence à tourne
+                                                            r à droite 
+  239 0000014A 4919            ldr              r1, = DUREE_TOURNE ;; pour la d
+                                                            uree de la boucle d
+                                                            'attente1 (wait1)
+  240 0000014C         tempoD
+  241 0000014C 3901            subs             r1, #1
+  242 0000014E D1FD            bne              tempoD
+  243 00000150 F7FF FFFE       BL               MOTEUR_DROIT_AVANT
+  244 00000154 4916            ldr              r1, = DUREE_TOURNE
+  245 00000156         tempoD1
+  246 00000156 3901            subs             r1, #1
+  247 00000158 D1FD            bne              tempoD1
+  248 0000015A F7FF FFFE       BL               MOTEUR_GAUCHE_ARRIERE
+  249 0000015E 4914            ldr              r1, = DUREE_TOURNE ;; pour la d
+                                                            uree de la boucle d
+                                                            'attente1 (wait1)
+  250 00000160         tempoD2
+  251 00000160 3901            subs             r1, #1
+  252 00000162 D1FD            bne              tempoD2
+  253 00000164 F7FF FFFE       BL               MOTEUR_DROIT_AVANT
+  254 00000168 F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
+  255 0000016C F7FF FFFE       BL               UNFREEZE_TIMER ; On UNFREEZE le
+                                                             timer
+  256 00000170 E78F            B                loop
+  257 00000172         
+  258 00000172         FIN
+  259 00000172 F7FF FFFE       BL               DISTANCE    ; Affiche la distan
+                                                            ce
+  260 00000176 E79B            B                end_
+  261 00000178         
+  262 00000178 BF00            NOP
+  263 0000017A                 END
+              00 00 400FE108 
+              40025400 
+              4002551C 
+              40025500 
               400250C0 
               40007510 
               4000751C 
@@ -475,6 +518,12 @@ urs.o -I.\RTE\_Target_1 -IC:\Users\polom\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.
 1\CMSIS\Core\Include -IC:\Users\polom\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\D
 evice\ARM\ARMCM3\Include --predefine="__EVAL SETA 1" --predefine="__MICROLIB SE
 TA 1" --predefine="__UVISION_VERSION SETA 528" --predefine="_RTE_ SETA 1" --pre
+
+
+
+ARM Macro Assembler    Page 9 
+
+
 define="ARMCM3 SETA 1" --list=.\listings\rk_priseenmain_moteurs.lst RK_PriseEnM
 ain_Moteurs.s
 
@@ -491,157 +540,148 @@ Symbol: .text
    Uses
       None
 Comment: .text unused
-DROITE 00000136
+DROITE 00000134
 
 Symbol: DROITE
    Definitions
-      At line 234 in file RK_PriseEnMain_Moteurs.s
+      At line 231 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 168 in file RK_PriseEnMain_Moteurs.s
-      At line 239 in file RK_PriseEnMain_Moteurs.s
+      At line 175 in file RK_PriseEnMain_Moteurs.s
+      At line 236 in file RK_PriseEnMain_Moteurs.s
 
-GAUCHE 00000100
+FIN 00000172
+
+Symbol: FIN
+   Definitions
+      At line 258 in file RK_PriseEnMain_Moteurs.s
+   Uses
+      At line 192 in file RK_PriseEnMain_Moteurs.s
+Comment: FIN used once
+GAUCHE 000000F2
 
 Symbol: GAUCHE
    Definitions
-      At line 209 in file RK_PriseEnMain_Moteurs.s
+      At line 203 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 166 in file RK_PriseEnMain_Moteurs.s
-      At line 214 in file RK_PriseEnMain_Moteurs.s
+      At line 173 in file RK_PriseEnMain_Moteurs.s
+      At line 208 in file RK_PriseEnMain_Moteurs.s
 
-OFF_MOTOR 000000E0
+OFF_MOTOR 000000C8
 
 Symbol: OFF_MOTOR
    Definitions
-      At line 196 in file RK_PriseEnMain_Moteurs.s
+      At line 187 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 163 in file RK_PriseEnMain_Moteurs.s
-      At line 212 in file RK_PriseEnMain_Moteurs.s
-      At line 237 in file RK_PriseEnMain_Moteurs.s
+      At line 170 in file RK_PriseEnMain_Moteurs.s
+      At line 193 in file RK_PriseEnMain_Moteurs.s
+      At line 206 in file RK_PriseEnMain_Moteurs.s
+      At line 234 in file RK_PriseEnMain_Moteurs.s
 
-ON_MOTOR 000000EE
+ON_MOTOR 000000DC
 
 Symbol: ON_MOTOR
    Definitions
-      At line 202 in file RK_PriseEnMain_Moteurs.s
+      At line 195 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 177 in file RK_PriseEnMain_Moteurs.s
-      At line 182 in file RK_PriseEnMain_Moteurs.s
-      At line 191 in file RK_PriseEnMain_Moteurs.s
-
-ReadState 0000006A
+      At line 184 in file RK_PriseEnMain_Moteurs.s
+Comment: ON_MOTOR used once
+ReadState 0000006E
 
 Symbol: ReadState
    Definitions
-      At line 141 in file RK_PriseEnMain_Moteurs.s
+      At line 146 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 145 in file RK_PriseEnMain_Moteurs.s
-Comment: ReadState used once
-__main 00000000
-
-Symbol: __main
-   Definitions
-      At line 74 in file RK_PriseEnMain_Moteurs.s
 
 
 
 ARM Macro Assembler    Page 2 Alphabetic symbol ordering
 Relocatable symbols
 
+      At line 150 in file RK_PriseEnMain_Moteurs.s
+Comment: ReadState used once
+__main 00000000
+
+Symbol: __main
+   Definitions
+      At line 78 in file RK_PriseEnMain_Moteurs.s
    Uses
       At line 8 in file RK_PriseEnMain_Moteurs.s
 Comment: __main used once
-end_ 000000A8
+end_ 000000B0
 
 Symbol: end_
    Definitions
-      At line 170 in file RK_PriseEnMain_Moteurs.s
+      At line 177 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 194 in file RK_PriseEnMain_Moteurs.s
-      At line 200 in file RK_PriseEnMain_Moteurs.s
+      At line 185 in file RK_PriseEnMain_Moteurs.s
+      At line 260 in file RK_PriseEnMain_Moteurs.s
 
-loop 0000008A
+loop 00000092
 
 Symbol: loop
    Definitions
-      At line 158 in file RK_PriseEnMain_Moteurs.s
+      At line 165 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 169 in file RK_PriseEnMain_Moteurs.s
-      At line 207 in file RK_PriseEnMain_Moteurs.s
-      At line 232 in file RK_PriseEnMain_Moteurs.s
-      At line 257 in file RK_PriseEnMain_Moteurs.s
+      At line 176 in file RK_PriseEnMain_Moteurs.s
+      At line 201 in file RK_PriseEnMain_Moteurs.s
+      At line 229 in file RK_PriseEnMain_Moteurs.s
+      At line 256 in file RK_PriseEnMain_Moteurs.s
 
-tempo 00000114
+tempo 0000010A
 
 Symbol: tempo
    Definitions
-      At line 217 in file RK_PriseEnMain_Moteurs.s
+      At line 212 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 219 in file RK_PriseEnMain_Moteurs.s
+      At line 215 in file RK_PriseEnMain_Moteurs.s
 Comment: tempo used once
-tempo1 0000011E
+tempo1 00000118
 
 Symbol: tempo1
    Definitions
-      At line 222 in file RK_PriseEnMain_Moteurs.s
+      At line 218 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 224 in file RK_PriseEnMain_Moteurs.s
+      At line 220 in file RK_PriseEnMain_Moteurs.s
 Comment: tempo1 used once
-tempo2 00000128
+tempo2 00000122
 
 Symbol: tempo2
    Definitions
-      At line 227 in file RK_PriseEnMain_Moteurs.s
+      At line 223 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 229 in file RK_PriseEnMain_Moteurs.s
+      At line 225 in file RK_PriseEnMain_Moteurs.s
 Comment: tempo2 used once
-tempoD 0000014A
+tempoD 0000014C
 
 Symbol: tempoD
    Definitions
-      At line 242 in file RK_PriseEnMain_Moteurs.s
-   Uses
-      At line 244 in file RK_PriseEnMain_Moteurs.s
-Comment: tempoD used once
-tempoD1 00000154
-
-Symbol: tempoD1
-   Definitions
+      At line 240 in file RK_PriseEnMain_Moteurs.s
 
 
 
 ARM Macro Assembler    Page 3 Alphabetic symbol ordering
 Relocatable symbols
 
-      At line 247 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 249 in file RK_PriseEnMain_Moteurs.s
+      At line 242 in file RK_PriseEnMain_Moteurs.s
+Comment: tempoD used once
+tempoD1 00000156
+
+Symbol: tempoD1
+   Definitions
+      At line 245 in file RK_PriseEnMain_Moteurs.s
+   Uses
+      At line 247 in file RK_PriseEnMain_Moteurs.s
 Comment: tempoD1 used once
-tempoD2 0000015E
+tempoD2 00000160
 
 Symbol: tempoD2
    Definitions
+      At line 250 in file RK_PriseEnMain_Moteurs.s
+   Uses
       At line 252 in file RK_PriseEnMain_Moteurs.s
-   Uses
-      At line 254 in file RK_PriseEnMain_Moteurs.s
 Comment: tempoD2 used once
-wait10 000000BE
-
-Symbol: wait10
-   Definitions
-      At line 179 in file RK_PriseEnMain_Moteurs.s
-   Uses
-      At line 184 in file RK_PriseEnMain_Moteurs.s
-Comment: wait10 used once
-wait2 000000D0
-
-Symbol: wait2
-   Definitions
-      At line 188 in file RK_PriseEnMain_Moteurs.s
-   Uses
-      At line 193 in file RK_PriseEnMain_Moteurs.s
-Comment: wait2 used once
-17 symbols
+16 symbols
 
 
 
@@ -652,147 +692,146 @@ BROCHE0_1 00000003
 
 Symbol: BROCHE0_1
    Definitions
-      At line 63 in file RK_PriseEnMain_Moteurs.s
+      At line 67 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 129 in file RK_PriseEnMain_Moteurs.s
-      At line 133 in file RK_PriseEnMain_Moteurs.s
-      At line 136 in file RK_PriseEnMain_Moteurs.s
+      At line 134 in file RK_PriseEnMain_Moteurs.s
+      At line 138 in file RK_PriseEnMain_Moteurs.s
+      At line 141 in file RK_PriseEnMain_Moteurs.s
 
 BROCHE4_5 00000030
 
 Symbol: BROCHE4_5
    Definitions
-      At line 61 in file RK_PriseEnMain_Moteurs.s
+      At line 65 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 90 in file RK_PriseEnMain_Moteurs.s
-      At line 94 in file RK_PriseEnMain_Moteurs.s
-      At line 98 in file RK_PriseEnMain_Moteurs.s
-      At line 104 in file RK_PriseEnMain_Moteurs.s
-      At line 106 in file RK_PriseEnMain_Moteurs.s
+      At line 95 in file RK_PriseEnMain_Moteurs.s
+      At line 99 in file RK_PriseEnMain_Moteurs.s
+      At line 103 in file RK_PriseEnMain_Moteurs.s
+      At line 109 in file RK_PriseEnMain_Moteurs.s
+      At line 111 in file RK_PriseEnMain_Moteurs.s
 
 BROCHE6_7 000000C0
 
 Symbol: BROCHE6_7
    Definitions
-      At line 65 in file RK_PriseEnMain_Moteurs.s
+      At line 69 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 115 in file RK_PriseEnMain_Moteurs.s
-      At line 119 in file RK_PriseEnMain_Moteurs.s
-      At line 122 in file RK_PriseEnMain_Moteurs.s
+      At line 120 in file RK_PriseEnMain_Moteurs.s
+      At line 124 in file RK_PriseEnMain_Moteurs.s
+      At line 127 in file RK_PriseEnMain_Moteurs.s
 
 DUREE 002FFFFF
 
 Symbol: DUREE
    Definitions
-      At line 72 in file RK_PriseEnMain_Moteurs.s
+      At line 76 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 174 in file RK_PriseEnMain_Moteurs.s
-      At line 186 in file RK_PriseEnMain_Moteurs.s
-
+      At line 181 in file RK_PriseEnMain_Moteurs.s
+Comment: DUREE used once
 DUREE_OFF 0001FFFF
 
 Symbol: DUREE_OFF
    Definitions
-      At line 69 in file RK_PriseEnMain_Moteurs.s
+      At line 73 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 155 in file RK_PriseEnMain_Moteurs.s
+      At line 161 in file RK_PriseEnMain_Moteurs.s
 Comment: DUREE_OFF used once
 DUREE_TOURNE 015FFFFF
 
 Symbol: DUREE_TOURNE
    Definitions
-      At line 67 in file RK_PriseEnMain_Moteurs.s
+      At line 71 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 216 in file RK_PriseEnMain_Moteurs.s
-      At line 221 in file RK_PriseEnMain_Moteurs.s
-      At line 226 in file RK_PriseEnMain_Moteurs.s
-      At line 241 in file RK_PriseEnMain_Moteurs.s
+      At line 211 in file RK_PriseEnMain_Moteurs.s
+      At line 217 in file RK_PriseEnMain_Moteurs.s
+      At line 222 in file RK_PriseEnMain_Moteurs.s
+      At line 239 in file RK_PriseEnMain_Moteurs.s
+      At line 244 in file RK_PriseEnMain_Moteurs.s
 
 
 
 ARM Macro Assembler    Page 2 Alphabetic symbol ordering
 Absolute symbols
 
-      At line 246 in file RK_PriseEnMain_Moteurs.s
-      At line 251 in file RK_PriseEnMain_Moteurs.s
+      At line 249 in file RK_PriseEnMain_Moteurs.s
 
 GPIO_I_PUR 00000510
 
 Symbol: GPIO_I_PUR
    Definitions
-      At line 58 in file RK_PriseEnMain_Moteurs.s
+      At line 62 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 114 in file RK_PriseEnMain_Moteurs.s
-      At line 128 in file RK_PriseEnMain_Moteurs.s
+      At line 119 in file RK_PriseEnMain_Moteurs.s
+      At line 133 in file RK_PriseEnMain_Moteurs.s
 
 GPIO_O_DEN 0000051C
 
 Symbol: GPIO_O_DEN
    Definitions
-      At line 55 in file RK_PriseEnMain_Moteurs.s
+      At line 59 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 93 in file RK_PriseEnMain_Moteurs.s
-      At line 118 in file RK_PriseEnMain_Moteurs.s
-      At line 132 in file RK_PriseEnMain_Moteurs.s
+      At line 98 in file RK_PriseEnMain_Moteurs.s
+      At line 123 in file RK_PriseEnMain_Moteurs.s
+      At line 137 in file RK_PriseEnMain_Moteurs.s
 
 GPIO_O_DIR 00000400
 
 Symbol: GPIO_O_DIR
    Definitions
-      At line 47 in file RK_PriseEnMain_Moteurs.s
+      At line 51 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 89 in file RK_PriseEnMain_Moteurs.s
+      At line 94 in file RK_PriseEnMain_Moteurs.s
 Comment: GPIO_O_DIR used once
 GPIO_O_DR2R 00000500
 
 Symbol: GPIO_O_DR2R
    Definitions
-      At line 51 in file RK_PriseEnMain_Moteurs.s
+      At line 55 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 97 in file RK_PriseEnMain_Moteurs.s
+      At line 102 in file RK_PriseEnMain_Moteurs.s
 Comment: GPIO_O_DR2R used once
 GPIO_PORTD_BASE 40007000
 
 Symbol: GPIO_PORTD_BASE
    Definitions
-      At line 40 in file RK_PriseEnMain_Moteurs.s
+      At line 44 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 114 in file RK_PriseEnMain_Moteurs.s
-      At line 118 in file RK_PriseEnMain_Moteurs.s
-      At line 122 in file RK_PriseEnMain_Moteurs.s
+      At line 119 in file RK_PriseEnMain_Moteurs.s
+      At line 123 in file RK_PriseEnMain_Moteurs.s
+      At line 127 in file RK_PriseEnMain_Moteurs.s
 
 GPIO_PORTE_BASE 40024000
 
 Symbol: GPIO_PORTE_BASE
    Definitions
-      At line 43 in file RK_PriseEnMain_Moteurs.s
+      At line 47 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 128 in file RK_PriseEnMain_Moteurs.s
-      At line 132 in file RK_PriseEnMain_Moteurs.s
-      At line 136 in file RK_PriseEnMain_Moteurs.s
+      At line 133 in file RK_PriseEnMain_Moteurs.s
+      At line 137 in file RK_PriseEnMain_Moteurs.s
+      At line 141 in file RK_PriseEnMain_Moteurs.s
 
 GPIO_PORTF_BASE 40025000
+
 
 
 
 ARM Macro Assembler    Page 3 Alphabetic symbol ordering
 Absolute symbols
 
-
 Symbol: GPIO_PORTF_BASE
    Definitions
-      At line 30 in file RK_PriseEnMain_Moteurs.s
+      At line 34 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 89 in file RK_PriseEnMain_Moteurs.s
-      At line 93 in file RK_PriseEnMain_Moteurs.s
-      At line 97 in file RK_PriseEnMain_Moteurs.s
-      At line 106 in file RK_PriseEnMain_Moteurs.s
+      At line 94 in file RK_PriseEnMain_Moteurs.s
+      At line 98 in file RK_PriseEnMain_Moteurs.s
+      At line 102 in file RK_PriseEnMain_Moteurs.s
+      At line 111 in file RK_PriseEnMain_Moteurs.s
 
 OFF_LED 00000000
 
 Symbol: OFF_LED
    Definitions
-      At line 37 in file RK_PriseEnMain_Moteurs.s
+      At line 41 in file RK_PriseEnMain_Moteurs.s
    Uses
       None
 Comment: OFF_LED unused
@@ -800,7 +839,7 @@ STCTRL E000E020
 
 Symbol: STCTRL
    Definitions
-      At line 33 in file RK_PriseEnMain_Moteurs.s
+      At line 37 in file RK_PriseEnMain_Moteurs.s
    Uses
       None
 Comment: STCTRL unused
@@ -808,7 +847,7 @@ STCURRENT E000E028
 
 Symbol: STCURRENT
    Definitions
-      At line 35 in file RK_PriseEnMain_Moteurs.s
+      At line 39 in file RK_PriseEnMain_Moteurs.s
    Uses
       None
 Comment: STCURRENT unused
@@ -816,7 +855,7 @@ STRELOAD E000E024
 
 Symbol: STRELOAD
    Definitions
-      At line 34 in file RK_PriseEnMain_Moteurs.s
+      At line 38 in file RK_PriseEnMain_Moteurs.s
    Uses
       None
 Comment: STRELOAD unused
@@ -824,25 +863,25 @@ SYSCTL_PERIPH_GPIO 400FE108
 
 Symbol: SYSCTL_PERIPH_GPIO
    Definitions
-      At line 27 in file RK_PriseEnMain_Moteurs.s
+      At line 31 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 77 in file RK_PriseEnMain_Moteurs.s
+      At line 82 in file RK_PriseEnMain_Moteurs.s
 Comment: SYSCTL_PERIPH_GPIO used once
 SYS_TICK_BASE E000E010
 
 Symbol: SYS_TICK_BASE
    Definitions
-      At line 32 in file RK_PriseEnMain_Moteurs.s
+      At line 36 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 33 in file RK_PriseEnMain_Moteurs.s
-      At line 34 in file RK_PriseEnMain_Moteurs.s
-      At line 35 in file RK_PriseEnMain_Moteurs.s
+      At line 37 in file RK_PriseEnMain_Moteurs.s
+      At line 38 in file RK_PriseEnMain_Moteurs.s
+      At line 39 in file RK_PriseEnMain_Moteurs.s
+
 
 
 
 ARM Macro Assembler    Page 4 Alphabetic symbol ordering
 Absolute symbols
-
 
 19 symbols
 
@@ -855,18 +894,36 @@ DISTANCE 00000000
 
 Symbol: DISTANCE
    Definitions
-      At line 25 in file RK_PriseEnMain_Moteurs.s
+      At line 27 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 199 in file RK_PriseEnMain_Moteurs.s
+      At line 259 in file RK_PriseEnMain_Moteurs.s
 Comment: DISTANCE used once
+FREEZE_TIMER 00000000
+
+Symbol: FREEZE_TIMER
+   Definitions
+      At line 28 in file RK_PriseEnMain_Moteurs.s
+   Uses
+      At line 209 in file RK_PriseEnMain_Moteurs.s
+      At line 214 in file RK_PriseEnMain_Moteurs.s
+      At line 237 in file RK_PriseEnMain_Moteurs.s
+
+INIT_TIMER 00000000
+
+Symbol: INIT_TIMER
+   Definitions
+      At line 26 in file RK_PriseEnMain_Moteurs.s
+   Uses
+      At line 81 in file RK_PriseEnMain_Moteurs.s
+Comment: INIT_TIMER used once
 MOTEUR_DROIT_ARRIERE 00000000
 
 Symbol: MOTEUR_DROIT_ARRIERE
    Definitions
       At line 16 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 225 in file RK_PriseEnMain_Moteurs.s
-      At line 240 in file RK_PriseEnMain_Moteurs.s
+      At line 221 in file RK_PriseEnMain_Moteurs.s
+      At line 238 in file RK_PriseEnMain_Moteurs.s
 
 MOTEUR_DROIT_AVANT 00000000
 
@@ -874,12 +931,12 @@ Symbol: MOTEUR_DROIT_AVANT
    Definitions
       At line 15 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 153 in file RK_PriseEnMain_Moteurs.s
-      At line 171 in file RK_PriseEnMain_Moteurs.s
-      At line 205 in file RK_PriseEnMain_Moteurs.s
-      At line 230 in file RK_PriseEnMain_Moteurs.s
-      At line 245 in file RK_PriseEnMain_Moteurs.s
-      At line 255 in file RK_PriseEnMain_Moteurs.s
+      At line 158 in file RK_PriseEnMain_Moteurs.s
+      At line 178 in file RK_PriseEnMain_Moteurs.s
+      At line 198 in file RK_PriseEnMain_Moteurs.s
+      At line 226 in file RK_PriseEnMain_Moteurs.s
+      At line 243 in file RK_PriseEnMain_Moteurs.s
+      At line 253 in file RK_PriseEnMain_Moteurs.s
 
 MOTEUR_DROIT_INVERSE 00000000
 
@@ -892,10 +949,16 @@ Comment: MOTEUR_DROIT_INVERSE unused
 MOTEUR_DROIT_OFF 00000000
 
 Symbol: MOTEUR_DROIT_OFF
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+External symbols
+
    Definitions
       At line 14 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 197 in file RK_PriseEnMain_Moteurs.s
+      At line 188 in file RK_PriseEnMain_Moteurs.s
 Comment: MOTEUR_DROIT_OFF used once
 MOTEUR_DROIT_ON 00000000
 
@@ -903,23 +966,17 @@ Symbol: MOTEUR_DROIT_ON
    Definitions
       At line 13 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 151 in file RK_PriseEnMain_Moteurs.s
-      At line 203 in file RK_PriseEnMain_Moteurs.s
+      At line 156 in file RK_PriseEnMain_Moteurs.s
+      At line 196 in file RK_PriseEnMain_Moteurs.s
 
 MOTEUR_GAUCHE_ARRIERE 00000000
 
 Symbol: MOTEUR_GAUCHE_ARRIERE
    Definitions
-
-
-
-ARM Macro Assembler    Page 2 Alphabetic symbol ordering
-External symbols
-
       At line 22 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 215 in file RK_PriseEnMain_Moteurs.s
-      At line 250 in file RK_PriseEnMain_Moteurs.s
+      At line 210 in file RK_PriseEnMain_Moteurs.s
+      At line 248 in file RK_PriseEnMain_Moteurs.s
 
 MOTEUR_GAUCHE_AVANT 00000000
 
@@ -927,12 +984,12 @@ Symbol: MOTEUR_GAUCHE_AVANT
    Definitions
       At line 21 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 154 in file RK_PriseEnMain_Moteurs.s
-      At line 172 in file RK_PriseEnMain_Moteurs.s
-      At line 206 in file RK_PriseEnMain_Moteurs.s
-      At line 220 in file RK_PriseEnMain_Moteurs.s
-      At line 231 in file RK_PriseEnMain_Moteurs.s
-      At line 256 in file RK_PriseEnMain_Moteurs.s
+      At line 159 in file RK_PriseEnMain_Moteurs.s
+      At line 179 in file RK_PriseEnMain_Moteurs.s
+      At line 199 in file RK_PriseEnMain_Moteurs.s
+      At line 216 in file RK_PriseEnMain_Moteurs.s
+      At line 227 in file RK_PriseEnMain_Moteurs.s
+      At line 254 in file RK_PriseEnMain_Moteurs.s
 
 MOTEUR_GAUCHE_INVERSE 00000000
 
@@ -948,7 +1005,7 @@ Symbol: MOTEUR_GAUCHE_OFF
    Definitions
       At line 20 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 198 in file RK_PriseEnMain_Moteurs.s
+      At line 189 in file RK_PriseEnMain_Moteurs.s
 Comment: MOTEUR_GAUCHE_OFF used once
 MOTEUR_GAUCHE_ON 00000000
 
@@ -956,8 +1013,14 @@ Symbol: MOTEUR_GAUCHE_ON
    Definitions
       At line 19 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 152 in file RK_PriseEnMain_Moteurs.s
-      At line 204 in file RK_PriseEnMain_Moteurs.s
+      At line 157 in file RK_PriseEnMain_Moteurs.s
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+External symbols
+
+      At line 197 in file RK_PriseEnMain_Moteurs.s
 
 MOTEUR_INIT 00000000
 
@@ -965,8 +1028,17 @@ Symbol: MOTEUR_INIT
    Definitions
       At line 11 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 148 in file RK_PriseEnMain_Moteurs.s
+      At line 153 in file RK_PriseEnMain_Moteurs.s
 Comment: MOTEUR_INIT used once
+RESET_TIMER 00000000
+
+Symbol: RESET_TIMER
+   Definitions
+      At line 25 in file RK_PriseEnMain_Moteurs.s
+   Uses
+      At line 160 in file RK_PriseEnMain_Moteurs.s
+      At line 200 in file RK_PriseEnMain_Moteurs.s
+
 Reset_Handlerone 00000000
 
 Symbol: Reset_Handlerone
@@ -975,11 +1047,14 @@ Symbol: Reset_Handlerone
    Uses
       None
 Comment: Reset_Handlerone unused
+UNFREEZE_TIMER 00000000
 
+Symbol: UNFREEZE_TIMER
+   Definitions
+      At line 29 in file RK_PriseEnMain_Moteurs.s
+   Uses
+      At line 228 in file RK_PriseEnMain_Moteurs.s
+      At line 255 in file RK_PriseEnMain_Moteurs.s
 
-
-ARM Macro Assembler    Page 3 Alphabetic symbol ordering
-External symbols
-
-13 symbols
-386 symbols in table
+17 symbols
+389 symbols in table
