@@ -178,7 +178,7 @@ end_
 		BL	MOTEUR_DROIT_AVANT	   
 		BL	MOTEUR_GAUCHE_AVANT
 		str r2, [r7]    						;; Eteint LED car r2 = 0x00      
-        ldr r1, = DUREE 						;; pour la duree de la boucle d'attente1 (wait1)
+		ldr r1, = DUREE_OFF 					;; pour la duree de la boucle d'attente1 (duree)
 		ldr r10,[r8]
 		CMP r10,#0x40							; On vérifie si le switch 2 est appuyé
 		BEQ ON_MOTOR							; Si appuyé on allumme le moteur
@@ -225,6 +225,7 @@ tempo2
 		BL	MOTEUR_DROIT_AVANT	   
 		BL	MOTEUR_GAUCHE_AVANT
 		BL  UNFREEZE_TIMER                          ; On UNFREEZE le timer
+		ldr r1, = DUREE_OFF 					;; pour la duree de la boucle d'attente1 (duree)
 		B loop
 
 DROITE 
@@ -252,6 +253,7 @@ tempoD2
 		BL	MOTEUR_DROIT_AVANT	   
 		BL	MOTEUR_GAUCHE_AVANT
 		BL  UNFREEZE_TIMER                          ; On UNFREEZE le timer
+		ldr r1, = DUREE_OFF 					;; pour la duree de la boucle d'attente1 (duree)
 		B loop
 
 FIN

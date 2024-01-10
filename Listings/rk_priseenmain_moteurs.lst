@@ -347,15 +347,15 @@ ARM Macro Assembler    Page 6
                                                             nt le moteur 
   171 0000009E F8D9 A000       ldr              r10,[r9]
   172 000000A2 F1BA 0F02       CMP              r10,#0x02   ; On vérifie si le 
-                                                            Bumper Gauche est a
+                                                            Bumper Droite est a
                                                             ppuyé
   173 000000A6 D024            BEQ              GAUCHE      ; On va dans l'étiq
                                                             uette GAUCHE sinon 
                                                             on continue
   174 000000A8 F1BA 0F01       CMP              r10,#0x01   ; On vérifie si le 
-                                                            Bumper Droite est a
+                                                            Bumper Gauche est a
                                                             ppuyé
-  175 000000AC D042            BEQ              DROITE      ; On va dans l'étiq
+  175 000000AC D041            BEQ              DROITE      ; On va dans l'étiq
                                                             uette Droite sinon 
                                                             on continue
   176 000000AE E7F0            B                loop        ; Si on y va dans a
@@ -367,9 +367,9 @@ ARM Macro Assembler    Page 6
   179 000000B4 F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
   180 000000B8 603A            str              r2, [r7]    ;; Eteint LED car r
                                                             2 = 0x00      
-  181 000000BA 493C            ldr              r1, = DUREE ;; pour la duree de
-                                                             la boucle d'attent
-                                                            e1 (wait1)
+  181 000000BA 493B            ldr              r1, = DUREE_OFF ;; pour la dure
+                                                            e de la boucle d'at
+                                                            tente1 (duree)
   182 000000BC F8D8 A000       ldr              r10,[r8]
   183 000000C0 F1BA 0F40       CMP              r10,#0x40   ; On vérifie si le 
                                                             switch 2 est appuyé
@@ -421,83 +421,88 @@ ARM Macro Assembler    Page 7
   210 00000104 F7FF FFFE       BL               MOTEUR_GAUCHE_ARRIERE ; Sinon o
                                                             n  Commence à tourn
                                                             er à gauche 
-  211 00000108 4929            ldr              r1, = DUREE_TOURNE ;; pour la d
+  211 00000108 4928            ldr              r1, = DUREE_TOURNE ;; pour la d
                                                             uree de la boucle d
                                                             'attente1 (wait1)
   212 0000010A         tempo
   213 0000010A 3901            subs             r1, #1
-  214 0000010C F7FF FFFE       BL               FREEZE_TIMER
-  215 00000110 D1FB            bne              tempo
-  216 00000112 F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
-  217 00000116 4926            ldr              r1, = DUREE_TOURNE
-  218 00000118         tempo1
-  219 00000118 3901            subs             r1, #1
-  220 0000011A D1FD            bne              tempo1
-  221 0000011C F7FF FFFE       BL               MOTEUR_DROIT_ARRIERE
-  222 00000120 4923            ldr              r1, = DUREE_TOURNE ;; pour la d
+  214 0000010C D1FD            bne              tempo
+  215 0000010E F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
+  216 00000112 4926            ldr              r1, = DUREE_TOURNE
+  217 00000114         tempo1
+  218 00000114 3901            subs             r1, #1
+  219 00000116 D1FD            bne              tempo1
+  220 00000118 F7FF FFFE       BL               MOTEUR_DROIT_ARRIERE
+  221 0000011C 4923            ldr              r1, = DUREE_TOURNE ;; pour la d
                                                             uree de la boucle d
                                                             'attente1 (wait1)
-  223 00000122         tempo2
-  224 00000122 3901            subs             r1, #1
-  225 00000124 D1FD            bne              tempo2
-  226 00000126 F7FF FFFE       BL               MOTEUR_DROIT_AVANT
-  227 0000012A F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
-  228 0000012E F7FF FFFE       BL               UNFREEZE_TIMER ; On UNFREEZE le
+  222 0000011E         tempo2
+  223 0000011E 3901            subs             r1, #1
+  224 00000120 D1FD            bne              tempo2
+  225 00000122 F7FF FFFE       BL               MOTEUR_DROIT_AVANT
+  226 00000126 F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
+  227 0000012A F7FF FFFE       BL               UNFREEZE_TIMER ; On UNFREEZE le
                                                              timer
-  229 00000132 E7AE            B                loop
-  230 00000134         
-  231 00000134         DROITE
-  232 00000134 F8D9 A000       ldr              r10,[r9]
-  233 00000138 F1BA 0F00       CMP              r10,#0x00   ; On vérifie si les
+  228 0000012E 491E            ldr              r1, = DUREE_OFF ;; pour la dure
+                                                            e de la boucle d'at
+                                                            tente1 (duree)
+  229 00000130 E7AF            B                loop
+  230 00000132         
+  231 00000132         DROITE
+  232 00000132 F8D9 A000       ldr              r10,[r9]
+  233 00000136 F1BA 0F00       CMP              r10,#0x00   ; On vérifie si les
                                                              deux Bumper sont a
                                                             ppuyé pendant un ce
-                                                            rtain temps
-  234 0000013C D0C4            BEQ              OFF_MOTOR   ; Si oui on eteint 
 
 
 
 ARM Macro Assembler    Page 8 
 
 
+                                                            rtain temps
+  234 0000013A D0C5            BEQ              OFF_MOTOR   ; Si oui on eteint 
                                                             les moteurs
-  235 0000013E 3901            subs             r1, #1
-  236 00000140 D1F8            bne              DROITE
-  237 00000142 F7FF FFFE       BL               FREEZE_TIMER ; On Freeze le tim
+  235 0000013C 3901            subs             r1, #1
+  236 0000013E D1F8            bne              DROITE
+  237 00000140 F7FF FFFE       BL               FREEZE_TIMER ; On Freeze le tim
                                                             er
-  238 00000146 F7FF FFFE       BL               MOTEUR_DROIT_ARRIERE ; Sinon on
+  238 00000144 F7FF FFFE       BL               MOTEUR_DROIT_ARRIERE ; Sinon on
                                                               Commence à tourne
                                                             r à droite 
-  239 0000014A 4919            ldr              r1, = DUREE_TOURNE ;; pour la d
+  239 00000148 4918            ldr              r1, = DUREE_TOURNE ;; pour la d
                                                             uree de la boucle d
                                                             'attente1 (wait1)
-  240 0000014C         tempoD
-  241 0000014C 3901            subs             r1, #1
-  242 0000014E D1FD            bne              tempoD
-  243 00000150 F7FF FFFE       BL               MOTEUR_DROIT_AVANT
-  244 00000154 4916            ldr              r1, = DUREE_TOURNE
-  245 00000156         tempoD1
-  246 00000156 3901            subs             r1, #1
-  247 00000158 D1FD            bne              tempoD1
-  248 0000015A F7FF FFFE       BL               MOTEUR_GAUCHE_ARRIERE
-  249 0000015E 4914            ldr              r1, = DUREE_TOURNE ;; pour la d
+  240 0000014A         tempoD
+  241 0000014A 3901            subs             r1, #1
+  242 0000014C D1FD            bne              tempoD
+  243 0000014E F7FF FFFE       BL               MOTEUR_DROIT_AVANT
+  244 00000152 4916            ldr              r1, = DUREE_TOURNE
+  245 00000154         tempoD1
+  246 00000154 3901            subs             r1, #1
+  247 00000156 D1FD            bne              tempoD1
+  248 00000158 F7FF FFFE       BL               MOTEUR_GAUCHE_ARRIERE
+  249 0000015C 4913            ldr              r1, = DUREE_TOURNE ;; pour la d
                                                             uree de la boucle d
                                                             'attente1 (wait1)
-  250 00000160         tempoD2
-  251 00000160 3901            subs             r1, #1
-  252 00000162 D1FD            bne              tempoD2
-  253 00000164 F7FF FFFE       BL               MOTEUR_DROIT_AVANT
-  254 00000168 F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
-  255 0000016C F7FF FFFE       BL               UNFREEZE_TIMER ; On UNFREEZE le
+  250 0000015E         tempoD2
+  251 0000015E 3901            subs             r1, #1
+  252 00000160 D1FD            bne              tempoD2
+  253 00000162 F7FF FFFE       BL               MOTEUR_DROIT_AVANT
+  254 00000166 F7FF FFFE       BL               MOTEUR_GAUCHE_AVANT
+  255 0000016A F7FF FFFE       BL               UNFREEZE_TIMER ; On UNFREEZE le
                                                              timer
-  256 00000170 E78F            B                loop
-  257 00000172         
-  258 00000172         FIN
-  259 00000172 F7FF FFFE       BL               DISTANCE    ; Affiche la distan
+  256 0000016E 490E            ldr              r1, = DUREE_OFF ;; pour la dure
+                                                            e de la boucle d'at
+                                                            tente1 (duree)
+  257 00000170 E78F            B                loop
+  258 00000172         
+  259 00000172         FIN
+  260 00000172 F7FF FFFE       BL               DISTANCE    ; Affiche la distan
                                                             ce
-  260 00000176 E79B            B                end_
-  261 00000178         
-  262 00000178 BF00            NOP
-  263 0000017A                 END
+  261 00000176 E79B            B                end_
+  262 00000178         
+  263 00000178 BF00            NOP
+  264 0000017A                 END
               00 00 400FE108 
               40025400 
               4002551C 
@@ -510,20 +515,19 @@ ARM Macro Assembler    Page 8
               4002451C 
               4002400C 
               0001FFFF 
-              002FFFFF 
               015FFFFF 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
 ork --depend=.\objects\rk_priseenmain_moteurs.d -o.\objects\rk_priseenmain_mote
-urs.o -I.\RTE\_Target_1 -IC:\Users\polom\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.
-1\CMSIS\Core\Include -IC:\Users\polom\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\D
-evice\ARM\ARMCM3\Include --predefine="__EVAL SETA 1" --predefine="__MICROLIB SE
-TA 1" --predefine="__UVISION_VERSION SETA 528" --predefine="_RTE_ SETA 1" --pre
 
 
 
 ARM Macro Assembler    Page 9 
 
 
+urs.o -I.\RTE\_Target_1 -IC:\Users\polom\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.
+1\CMSIS\Core\Include -IC:\Users\polom\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\D
+evice\ARM\ARMCM3\Include --predefine="__EVAL SETA 1" --predefine="__MICROLIB SE
+TA 1" --predefine="__UVISION_VERSION SETA 528" --predefine="_RTE_ SETA 1" --pre
 define="ARMCM3 SETA 1" --list=.\listings\rk_priseenmain_moteurs.lst RK_PriseEnM
 ain_Moteurs.s
 
@@ -540,7 +544,7 @@ Symbol: .text
    Uses
       None
 Comment: .text unused
-DROITE 00000134
+DROITE 00000132
 
 Symbol: DROITE
    Definitions
@@ -553,7 +557,7 @@ FIN 00000172
 
 Symbol: FIN
    Definitions
-      At line 258 in file RK_PriseEnMain_Moteurs.s
+      At line 259 in file RK_PriseEnMain_Moteurs.s
    Uses
       At line 192 in file RK_PriseEnMain_Moteurs.s
 Comment: FIN used once
@@ -614,7 +618,7 @@ Symbol: end_
       At line 177 in file RK_PriseEnMain_Moteurs.s
    Uses
       At line 185 in file RK_PriseEnMain_Moteurs.s
-      At line 260 in file RK_PriseEnMain_Moteurs.s
+      At line 261 in file RK_PriseEnMain_Moteurs.s
 
 loop 00000092
 
@@ -625,7 +629,7 @@ Symbol: loop
       At line 176 in file RK_PriseEnMain_Moteurs.s
       At line 201 in file RK_PriseEnMain_Moteurs.s
       At line 229 in file RK_PriseEnMain_Moteurs.s
-      At line 256 in file RK_PriseEnMain_Moteurs.s
+      At line 257 in file RK_PriseEnMain_Moteurs.s
 
 tempo 0000010A
 
@@ -633,25 +637,25 @@ Symbol: tempo
    Definitions
       At line 212 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 215 in file RK_PriseEnMain_Moteurs.s
+      At line 214 in file RK_PriseEnMain_Moteurs.s
 Comment: tempo used once
-tempo1 00000118
+tempo1 00000114
 
 Symbol: tempo1
    Definitions
-      At line 218 in file RK_PriseEnMain_Moteurs.s
+      At line 217 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 220 in file RK_PriseEnMain_Moteurs.s
+      At line 219 in file RK_PriseEnMain_Moteurs.s
 Comment: tempo1 used once
-tempo2 00000122
+tempo2 0000011E
 
 Symbol: tempo2
    Definitions
-      At line 223 in file RK_PriseEnMain_Moteurs.s
+      At line 222 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 225 in file RK_PriseEnMain_Moteurs.s
+      At line 224 in file RK_PriseEnMain_Moteurs.s
 Comment: tempo2 used once
-tempoD 0000014C
+tempoD 0000014A
 
 Symbol: tempoD
    Definitions
@@ -665,7 +669,7 @@ Relocatable symbols
    Uses
       At line 242 in file RK_PriseEnMain_Moteurs.s
 Comment: tempoD used once
-tempoD1 00000156
+tempoD1 00000154
 
 Symbol: tempoD1
    Definitions
@@ -673,7 +677,7 @@ Symbol: tempoD1
    Uses
       At line 247 in file RK_PriseEnMain_Moteurs.s
 Comment: tempoD1 used once
-tempoD2 00000160
+tempoD2 0000015E
 
 Symbol: tempoD2
    Definitions
@@ -726,8 +730,8 @@ Symbol: DUREE
    Definitions
       At line 76 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 181 in file RK_PriseEnMain_Moteurs.s
-Comment: DUREE used once
+      None
+Comment: DUREE unused
 DUREE_OFF 0001FFFF
 
 Symbol: DUREE_OFF
@@ -735,7 +739,10 @@ Symbol: DUREE_OFF
       At line 73 in file RK_PriseEnMain_Moteurs.s
    Uses
       At line 161 in file RK_PriseEnMain_Moteurs.s
-Comment: DUREE_OFF used once
+      At line 181 in file RK_PriseEnMain_Moteurs.s
+      At line 228 in file RK_PriseEnMain_Moteurs.s
+      At line 256 in file RK_PriseEnMain_Moteurs.s
+
 DUREE_TOURNE 015FFFFF
 
 Symbol: DUREE_TOURNE
@@ -743,16 +750,16 @@ Symbol: DUREE_TOURNE
       At line 71 in file RK_PriseEnMain_Moteurs.s
    Uses
       At line 211 in file RK_PriseEnMain_Moteurs.s
-      At line 217 in file RK_PriseEnMain_Moteurs.s
-      At line 222 in file RK_PriseEnMain_Moteurs.s
-      At line 239 in file RK_PriseEnMain_Moteurs.s
-      At line 244 in file RK_PriseEnMain_Moteurs.s
+      At line 216 in file RK_PriseEnMain_Moteurs.s
 
 
 
 ARM Macro Assembler    Page 2 Alphabetic symbol ordering
 Absolute symbols
 
+      At line 221 in file RK_PriseEnMain_Moteurs.s
+      At line 239 in file RK_PriseEnMain_Moteurs.s
+      At line 244 in file RK_PriseEnMain_Moteurs.s
       At line 249 in file RK_PriseEnMain_Moteurs.s
 
 GPIO_I_PUR 00000510
@@ -810,13 +817,13 @@ Symbol: GPIO_PORTE_BASE
       At line 137 in file RK_PriseEnMain_Moteurs.s
       At line 141 in file RK_PriseEnMain_Moteurs.s
 
-GPIO_PORTF_BASE 40025000
-
-
 
 
 ARM Macro Assembler    Page 3 Alphabetic symbol ordering
 Absolute symbols
+
+
+GPIO_PORTF_BASE 40025000
 
 Symbol: GPIO_PORTF_BASE
    Definitions
@@ -874,14 +881,14 @@ Symbol: SYS_TICK_BASE
       At line 36 in file RK_PriseEnMain_Moteurs.s
    Uses
       At line 37 in file RK_PriseEnMain_Moteurs.s
-      At line 38 in file RK_PriseEnMain_Moteurs.s
-      At line 39 in file RK_PriseEnMain_Moteurs.s
-
 
 
 
 ARM Macro Assembler    Page 4 Alphabetic symbol ordering
 Absolute symbols
+
+      At line 38 in file RK_PriseEnMain_Moteurs.s
+      At line 39 in file RK_PriseEnMain_Moteurs.s
 
 19 symbols
 
@@ -896,7 +903,7 @@ Symbol: DISTANCE
    Definitions
       At line 27 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 259 in file RK_PriseEnMain_Moteurs.s
+      At line 260 in file RK_PriseEnMain_Moteurs.s
 Comment: DISTANCE used once
 FREEZE_TIMER 00000000
 
@@ -905,7 +912,6 @@ Symbol: FREEZE_TIMER
       At line 28 in file RK_PriseEnMain_Moteurs.s
    Uses
       At line 209 in file RK_PriseEnMain_Moteurs.s
-      At line 214 in file RK_PriseEnMain_Moteurs.s
       At line 237 in file RK_PriseEnMain_Moteurs.s
 
 INIT_TIMER 00000000
@@ -922,7 +928,7 @@ Symbol: MOTEUR_DROIT_ARRIERE
    Definitions
       At line 16 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 221 in file RK_PriseEnMain_Moteurs.s
+      At line 220 in file RK_PriseEnMain_Moteurs.s
       At line 238 in file RK_PriseEnMain_Moteurs.s
 
 MOTEUR_DROIT_AVANT 00000000
@@ -934,7 +940,7 @@ Symbol: MOTEUR_DROIT_AVANT
       At line 158 in file RK_PriseEnMain_Moteurs.s
       At line 178 in file RK_PriseEnMain_Moteurs.s
       At line 198 in file RK_PriseEnMain_Moteurs.s
-      At line 226 in file RK_PriseEnMain_Moteurs.s
+      At line 225 in file RK_PriseEnMain_Moteurs.s
       At line 243 in file RK_PriseEnMain_Moteurs.s
       At line 253 in file RK_PriseEnMain_Moteurs.s
 
@@ -949,13 +955,13 @@ Comment: MOTEUR_DROIT_INVERSE unused
 MOTEUR_DROIT_OFF 00000000
 
 Symbol: MOTEUR_DROIT_OFF
+   Definitions
 
 
 
 ARM Macro Assembler    Page 2 Alphabetic symbol ordering
 External symbols
 
-   Definitions
       At line 14 in file RK_PriseEnMain_Moteurs.s
    Uses
       At line 188 in file RK_PriseEnMain_Moteurs.s
@@ -987,8 +993,8 @@ Symbol: MOTEUR_GAUCHE_AVANT
       At line 159 in file RK_PriseEnMain_Moteurs.s
       At line 179 in file RK_PriseEnMain_Moteurs.s
       At line 199 in file RK_PriseEnMain_Moteurs.s
-      At line 216 in file RK_PriseEnMain_Moteurs.s
-      At line 227 in file RK_PriseEnMain_Moteurs.s
+      At line 215 in file RK_PriseEnMain_Moteurs.s
+      At line 226 in file RK_PriseEnMain_Moteurs.s
       At line 254 in file RK_PriseEnMain_Moteurs.s
 
 MOTEUR_GAUCHE_INVERSE 00000000
@@ -1014,13 +1020,13 @@ Symbol: MOTEUR_GAUCHE_ON
       At line 19 in file RK_PriseEnMain_Moteurs.s
    Uses
       At line 157 in file RK_PriseEnMain_Moteurs.s
+      At line 197 in file RK_PriseEnMain_Moteurs.s
 
 
 
 ARM Macro Assembler    Page 3 Alphabetic symbol ordering
 External symbols
 
-      At line 197 in file RK_PriseEnMain_Moteurs.s
 
 MOTEUR_INIT 00000000
 
@@ -1053,7 +1059,7 @@ Symbol: UNFREEZE_TIMER
    Definitions
       At line 29 in file RK_PriseEnMain_Moteurs.s
    Uses
-      At line 228 in file RK_PriseEnMain_Moteurs.s
+      At line 227 in file RK_PriseEnMain_Moteurs.s
       At line 255 in file RK_PriseEnMain_Moteurs.s
 
 17 symbols
